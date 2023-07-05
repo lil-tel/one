@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "87039107326",
+    "project_id": "one1-2d454",
+    "storage_bucket": "one1-2d454.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:87039107326:android:fd65b04f9ec974fbf045af",
+        "android_client_info": {
+          "package_name": "com.liltellespoir.one"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "87039107326-07btdg9ok6htnuhf0f390f10hk8otl6e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCVYxXGxcB-25Q58P8RDhLbErnY5mr2dzY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "87039107326-07btdg9ok6htnuhf0f390f10hk8otl6e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
