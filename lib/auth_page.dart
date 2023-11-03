@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthPage extends StatefulWidget {
+  const AuthPage({super.key});
+
   @override
   _AuthPageState createState() => _AuthPageState();
 }
@@ -41,6 +43,7 @@ class _AuthPageState extends State<AuthPage> {
       // TODO: Handle successful sign-in, e.g., navigate to the home screen
       // You can replace the line below with your navigation logic
       print('Signed in: ${userCredential.user}');
+      Navigator.pop(context);
     } catch (e) {
       showDialog(
         context: context,
@@ -56,6 +59,7 @@ class _AuthPageState extends State<AuthPage> {
         ),
       );
     }
+
   }
 
   @override

@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:one/ThemeManager.dart';
 
 import 'package:one/profile_page.dart';
 import 'package:one/appearance_page.dart';
 
 
 class SettingsPage extends StatelessWidget {
-  const SettingsPage(this.theme, {super.key});
-
-  final ThemeNotifier theme;
+  const SettingsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +61,7 @@ class SettingsPage extends StatelessWidget {
               onTap: () {
                 Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => AppearancePage(theme)),
+                MaterialPageRoute(builder: (context) => AppearancePage()),
                 );
               },
             ),

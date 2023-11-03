@@ -3,20 +3,32 @@ import 'package:flutter/services.dart';
 
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
+import 'package:one/create_post.dart';
 
-class PagePlus extends StatelessWidget {
-  const PagePlus({Key? key}) : super(key: key);
+class PagePlus extends StatefulWidget {
+  PagePlus({Key? key}) : super(key: key);
+
+  @override
+  _PagePlusState createState() => _PagePlusState();
+}
+
+class _PagePlusState extends State<PagePlus>{
+
+  final TextEditingController _postController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    const default_padding = EdgeInsets.symmetric(horizontal: 8, vertical: 16);
+    const defaultPadding = EdgeInsets.symmetric(horizontal: 8, vertical: 16);
+    String malone = _postController.text.trim();
+    print(malone);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        const Padding(
-          padding: default_padding,
+        Padding(
+          padding: defaultPadding,
           child: TextField(
-            decoration: InputDecoration(
+            controller: _postController,
+            decoration: const InputDecoration(
               border: OutlineInputBorder(),
               hintText: "What's on your mind?",
             ),
@@ -26,30 +38,57 @@ class PagePlus extends StatelessWidget {
           ),
         ),
         Padding(
-          padding: default_padding,
-          child: Text(
-            "More coming soon",
-            style: TextStyle(
-              color: Theme.of(context).colorScheme.primary ,
-              fontSize: 45,
-              fontWeight: FontWeight.w500,
-            ),
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            children: [
+              ElevatedButton(
+                  onPressed: () {
+                    _createPost();
+                  },
+                  child: Text('Create Post')
+              ),
+              TextButton(
+                  child: Text('Or import a file'),
+                  onPressed: (){
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => ImportFile()));
+                  }
+              )
+            ],
           ),
-        ),
+        )
       ],
     );
   }
+
+  void _createPost() {
+    String postText = _postController.text.trim();
+
+    if (postText.isNotEmpty) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => CreatePostPage(postText: postText, context: context)),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Please enter a post.'),
+        ),
+      );
+    }
+  }
+
 }
 
-class CreatePostPage extends StatefulWidget {
+
+class ImportFile extends StatefulWidget {
   @override
-  _CreatePostPageState createState() => _CreatePostPageState();
+  _ImportFileState createState() => _ImportFileState();
 }
 
-class _CreatePostPageState extends State<CreatePostPage> {
+class _ImportFileState extends State<ImportFile> {
   File? _imageFile;
   final picker = ImagePicker();
-  TextEditingController _captionController = TextEditingController();
+  final TextEditingController _captionController = TextEditingController();
 
   Future<void> _pickImage(ImageSource source) async {
     final pickedFile = await picker.pickImage(source: source);
@@ -61,9 +100,25 @@ class _CreatePostPageState extends State<CreatePostPage> {
     });
   }
 
-  void _createPost() {
-    // TODO: Implement post creation logic, including sending it to people
-    // Access the selected image using `_imageFile` and the caption using `_captionController.text`
+  void _createImage() {
+    String caption = _captionController.text.trim();
+
+    if (/*caption.isNotEmpty ||*/ _imageFile != null) {
+      // TODO: Implement post creation logic, including sending it to people
+      // Access the selected image using `_imageFile` and the caption using `_captionController.text`
+      if (caption.isNotEmpty) {
+        print('Text Post: $caption');
+      }
+      if (_imageFile != null) {
+        print('Image File: $_imageFile');
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Please enter a caption or select a photo.'),
+        ),
+      );
+    }
   }
 
   @override
@@ -91,7 +146,7 @@ class _CreatePostPageState extends State<CreatePostPage> {
             ),
             SizedBox(height: 16.0),
             ElevatedButton(
-              onPressed: _createPost,
+              onPressed: _createImage,
               child: Text('Create Post'),
             ),
           ],

@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:one/ThemeManager.dart';
+import 'package:one/main.dart';
 
-import 'dart:async';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class AppearancePage extends StatelessWidget {
-  const AppearancePage(this.theme, {super.key});
-
-  final ThemeNotifier theme;
+  const AppearancePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -38,16 +34,15 @@ class AppearancePage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 GestureDetector(
-                  onTap: () => theme.setDarkMode(),
+                  onTap: () => MyApp.of(context).changeTheme(ThemeMode.dark),
                   child: Card(
-                    shadowColor: theme.getTheme().colorScheme.onSurface,
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: Column(
                         children:(
                           [
                             Icon(
-                              theme.getTheme() == theme.darkTheme ? Icons.dark_mode : Icons.dark_mode_outlined,
+                              MyApp.of(context).getTheme() == ThemeMode.dark ? Icons.dark_mode : Icons.dark_mode_outlined,
                               size: 50,
                             ),
                             Text('Dark mode')
@@ -58,16 +53,35 @@ class AppearancePage extends StatelessWidget {
                   )
                 ),
                 GestureDetector(
-                  onTap: () => theme.setLightMode(),
+                    onTap: () => MyApp.of(context).changeTheme(ThemeMode.system),
+                    child: Card(
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Column(
+                              children:(
+                                  [
+                                    Icon(
+                                      MyApp.of(context).getTheme() == ThemeMode.system
+                                          ? Icons.circle_rounded : Icons.circle_outlined,
+                                      size: 50,
+                                    ),
+                                    Text('System mode')
+                                  ]
+                              )
+                          ),
+                        )
+                    )
+                ),
+                GestureDetector(
+                  onTap: () => MyApp.of(context).changeTheme(ThemeMode.light),
                   child: Card(
-                    shadowColor: theme.getTheme().colorScheme.onSurface,
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: Column(
                         children:(
                           [
                             Icon(
-                              theme.getTheme() == theme.lightTheme ? Icons.light_mode : Icons.light_mode_outlined,
+                              MyApp.of(context).getTheme() == ThemeMode.light ? Icons.light_mode : Icons.light_mode_outlined,
                               size: 50,
                             ),
                             Text('Light mode')

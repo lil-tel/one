@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:one/ThemeManager.dart';
-import 'package:provider/provider.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import 'dart:async';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:one/splash_screen.dart';
 import 'package:one/auth_page.dart';
@@ -21,50 +17,62 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp();
-  return runApp(ChangeNotifierProvider<ThemeNotifier>(
-    create: (_) => new ThemeNotifier(),
-    child: MyApp(),
-  ));;
+
+  return runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
-  // SharedPreferences? prefs;
-  // bool dark = false;
+  _MyAppState createState() => _MyAppState();
 
-  /*void getSharedPreferences() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final bool? dark = prefs.getBool('dark');
-    if (dark == null){
-      await prefs.setBool('dark', false);
-    }
-  }*/
+  static _MyAppState of(BuildContext context) =>
+      context.findAncestorStateOfType<_MyAppState>()!;
+}
+
+class _MyAppState extends State<MyApp> {
+  Color _color = ThemeData().primaryColor;
+  ThemeMode _themeMode = ThemeMode.system;
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<ThemeNotifier>(
-        builder: (context, theme, _) => MaterialApp(// This widget is the root of your application.
-          title: 'One',
-          theme: theme.getTheme(),
-          home: SplashScreen(theme), // Set SplashScreen as the home route
+    return MaterialApp(// This widget is the root of your application.
+      title: 'One',
+      theme: ThemeData.from(
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: _color,
         ),
+      ),
+      darkTheme: ThemeData.from(
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: _color,
+          brightness: Brightness.values[0],
+        ),
+      ),
+      themeMode: _themeMode,
+      home: SplashScreen(), // Set SplashScreen as the home route
     );
+  }
+
+  void changeTheme(ThemeMode themeMode) {
+    setState(() {
+      _themeMode = themeMode;
+    });
+  }
+
+  ThemeMode getTheme(){
+    return _themeMode;
   }
 }
 
 class AppInitializer extends StatefulWidget {
-  const AppInitializer({super.key, required this.theme});
-
-  final ThemeNotifier theme;
+  const AppInitializer({super.key});
 
   @override
-  _AppInitializerState createState() => _AppInitializerState(theme:theme);
+  _AppInitializerState createState() => _AppInitializerState();
 }
 
 class _AppInitializerState extends State<AppInitializer> {
-  _AppInitializerState({required this.theme});
-
-  final ThemeNotifier theme;
+  _AppInitializerState();
 
   User? _user;
 
@@ -87,30 +95,27 @@ class _AppInitializerState extends State<AppInitializer> {
     if (_user == null) {
       return AuthPage();
     } else {
-      return HomePage(theme);
+      return HomePage();
     }
   }
 }
 
 class HomePage extends StatefulWidget {
-  const HomePage(this.theme, {Key? key}) : super(key: key);
-
-  final ThemeNotifier theme;
+  const HomePage({Key? key}) : super(key: key);
 
   @override
-  _HomePageState createState() => _HomePageState(theme);
+  _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  _HomePageState (this.theme);
+  _HomePageState ();
 
-  final ThemeNotifier theme;
   int pageIndex = 0;
 
   final pages = [
-    const PageHome(),
-    const PagePlus(),
-    const PagePeople(),
+    PageHome(),
+    PagePlus(),
+    PagePeople(),
   ];
 
   @override
@@ -133,7 +138,7 @@ class _HomePageState extends State<HomePage> {
             fontWeight: FontWeight.w600,
           ),
         ),
-        actions: getActions(context, theme),
+        actions: getActions(context),
       ),
       body: pages[pageIndex],
       bottomNavigationBar: buildMyNavBar(context),
@@ -211,17 +216,19 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  getActions(BuildContext context, ThemeNotifier theme) {
+  getActions(BuildContext context) {
     switch (pageIndex) {
       case 2:
         return [IconButton(
+          color: Theme.of(context).colorScheme.primary,
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => SettingsPage(theme)),
+              MaterialPageRoute(builder: (context) => SettingsPage()),
             );
           },
-          icon: const Icon(
+          icon: Icon(
+            color: Theme.of(context).colorScheme.primary,
             Icons.settings,
           ),
         )
